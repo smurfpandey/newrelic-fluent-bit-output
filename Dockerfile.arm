@@ -1,4 +1,4 @@
-FROM golang:1.11-buster AS builder
+FROM golang:1.11 AS builder
 
 RUN apt-get update && apt-get install -y g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
 
