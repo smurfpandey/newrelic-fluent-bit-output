@@ -96,6 +96,7 @@ jobs:
             ${{ env.DOCKERHUB_REPOSITORY }}:latest
             ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.IMAGE_TAG }}
           builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/arm/v7
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
