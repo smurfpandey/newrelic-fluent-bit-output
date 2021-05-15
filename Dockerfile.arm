@@ -1,4 +1,4 @@
-FROM golang:1.11 AS builder
+FROM golang:1.14 AS builder
 
 RUN apt-get update && apt-get install -y g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
 
@@ -14,7 +14,7 @@ ENV SOURCE docker
 RUN go get github.com/fluent/fluent-bit-go/output
 RUN make linux-arm
 
-FROM fluent/fluent-bit:arm32v7-1.6.2
+FROM fluent/fluent-bit:arm32v7-1.7.5
 
 COPY --from=builder /go/src/github.com/newrelic/newrelic-fluent-bit-output/out_newrelic-linux-arm-*.so /fluent-bit/bin/out_newrelic.so
 COPY *.conf /fluent-bit/etc/
