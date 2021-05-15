@@ -1,6 +1,6 @@
-FROM golang:1.11 AS builder
+FROM golang:1.11-buster AS builder
 
-RUN apt-get install g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf -y
+RUN apt-get update && apt-get install -y g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
 
 WORKDIR /go/src/github.com/newrelic/newrelic-fluent-bit-output
 
