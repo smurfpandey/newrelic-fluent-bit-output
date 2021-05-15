@@ -1,6 +1,6 @@
 FROM golang:1.14 AS builder
 
-RUN apt-get update && apt-get install -y g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
+RUN apt-get update && apt-get install -y mingw-w64 g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf
 
 WORKDIR /go/src/github.com/newrelic/newrelic-fluent-bit-output
 
