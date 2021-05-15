@@ -83,6 +83,22 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
+      - name: Build and Publish Docker image for arm32v7
+        uses: docker/build-push-action@v2
+        env:
+          DOCKERHUB_REPOSITORY: newrelic/newrelic-fluentbit-output
+          IMAGE_TAG: ${{ env.VERSION }}
+        with:
+          context: ./
+          file: ./Dockerfile.arm
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_REPOSITORY }}:latest
+            ${{ env.DOCKERHUB_REPOSITORY }}:${{ env.IMAGE_TAG }}
+          builder: ${{ steps.buildx.outputs.name }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+
       - name: Image digest
         run: 'echo "Published Docker image with digest: ${{ steps.docker_build.outputs.digest }}"'
 
