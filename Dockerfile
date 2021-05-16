@@ -26,9 +26,9 @@ RUN make $BUILD_CMD
 FROM fluent/fluent-bit:1.6.2
 
 ARG OUTPUT_FILE="amd64"
-RUN if [[ $TARGETPLATFORM == "linux/amd64" ]] ; then OUTPUT_FILE="amd64" ; fi
-RUN if [[ $TARGETPLATFORM == "linux/arm/v7" ]] ; then OUTPUT_FILE="arm" ; fi
-RUN if [[ $TARGETPLATFORM == "linux/arm64" ]] ; then OUTPUT_FILE="arm64" ; fi
+RUN if [ $TARGETPLATFORM == "linux/amd64" ] ; then OUTPUT_FILE="amd64" ; fi
+RUN if [ $TARGETPLATFORM == "linux/arm/v7" ] ; then OUTPUT_FILE="arm" ; fi
+RUN if [ $TARGETPLATFORM == "linux/arm64" ] ; then OUTPUT_FILE="arm64" ; fi
 
 COPY --from=builder /go/src/github.com/newrelic/newrelic-fluent-bit-output/out_newrelic-linux-$OUTPUT_FILE-*.so /fluent-bit/bin/out_newrelic.so
 COPY *.conf /fluent-bit/etc/
