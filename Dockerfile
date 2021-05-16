@@ -1,5 +1,9 @@
 FROM golang:1.11 AS builder
 
+# Install mingw, arm32 and arm64 compilers
+RUN apt-get update 
+RUN apt-get install -y mingw-w64 g++-arm-linux-gnueabihf g++-aarch64-linux-gnu gcc-arm-linux-gnueabihf gcc-aarch64-linux-gnu
+
 WORKDIR /go/src/github.com/newrelic/newrelic-fluent-bit-output
 
 COPY Makefile go.* *.go /go/src/github.com/newrelic/newrelic-fluent-bit-output/
@@ -10,11 +14,23 @@ COPY utils/ /go/src/github.com/newrelic/newrelic-fluent-bit-output/utils
 
 ENV SOURCE docker
 RUN go get github.com/fluent/fluent-bit-go/output
-RUN make linux-amd64
+
+# Find target platform
+ARG BUILD_CMD="linux-amd64"
+RUN if [[ $TARGETPLATFORM == "linux/amd64" ]] ; then $BUILD_CMD="linux-amd64" ; fi
+RUN if [[ $TARGETPLATFORM == "linux/arm/v7" ]] ; then $BUILD_CMD="linux-arm" ; fi
+RUN if [[ $TARGETPLATFORM == "linux/arm64" ]] ; then $BUILD_CMD="linux-arm64" ; fi
+
+RUN make $BUILD_CMD
 
 FROM fluent/fluent-bit:1.6.2
 
-COPY --from=builder /go/src/github.com/newrelic/newrelic-fluent-bit-output/out_newrelic-linux-amd64-*.so /fluent-bit/bin/out_newrelic.so
+ARG OUTPUT_FILE="amd64"
+RUN if [[ $TARGETPLATFORM == "linux/amd64" ]] ; then $OUTPUT_FILE="amd64" ; fi
+RUN if [[ $TARGETPLATFORM == "linux/arm/v7" ]] ; then $OUTPUT_FILE="arm" ; fi
+RUN if [[ $TARGETPLATFORM == "linux/arm64" ]] ; then $OUTPUT_FILE="arm64" ; fi
+
+COPY --from=builder /go/src/github.com/newrelic/newrelic-fluent-bit-output/out_newrelic-linux-$OUTPUT_FILE-*.so /fluent-bit/bin/out_newrelic.so
 COPY *.conf /fluent-bit/etc/
 
 CMD ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf", "-e", "/fluent-bit/bin/out_newrelic.so"]
