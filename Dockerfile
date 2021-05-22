@@ -27,7 +27,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then make linux-amd64 ; fi
 RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then make linux-arm ; fi
 RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then make linux-arm64 ; fi
 
-FROM fluent/fluent-bit:1.6.2
+FROM fluent/fluent-bit:1.7.6
 
 ARG OUTPUT_FILE="amd64"
 # RUN if [ $TARGETPLATFORM == "linux/amd64" ] ; then OUTPUT_FILE="amd64" ; fi
