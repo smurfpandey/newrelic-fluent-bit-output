@@ -60,7 +60,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          platforms: linux/arm/v7
+          platforms: linux/arm/v7, linux/amd64
           tags: ${{ steps.prep.outputs.tags }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
