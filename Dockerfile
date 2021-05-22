@@ -1,5 +1,8 @@
 FROM golang:1.11 AS builder
 
+ARG TARGETPLATFORM
+ENV TARGETPLATFORM=${TARGETPLATFORM:-linux/amd64}
+
 # Install mingw, arm32 and arm64 compilers
 RUN echo "$TARGETPLATFORM"
 RUN apt-get update 
