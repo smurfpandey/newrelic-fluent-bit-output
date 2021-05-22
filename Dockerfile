@@ -22,13 +22,10 @@ COPY utils/ /go/src/github.com/newrelic/newrelic-fluent-bit-output/utils
 ENV SOURCE docker
 RUN go get github.com/fluent/fluent-bit-go/output
 
-# Find target platform
-ARG BUILD_CMD="linux-amd64"
-RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then BUILD_CMD="linux-amd64" ; fi
-RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then BUILD_CMD="linux-arm" ; fi
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then BUILD_CMD="linux-arm64" ; fi
-
-RUN make $BUILD_CMD
+# Build for target platform
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ] ; then make linux-amd64 ; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm/v7" ] ; then make linux-arm ; fi
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ] ; then make linux-arm64 ; fi
 
 FROM fluent/fluent-bit:1.6.2
 
